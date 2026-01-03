@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>The Queen – Live Scenario Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      color: #f8fafc;
+      margin: 0;
+      padding: 40px;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    h2 {
+      text-align: center;
+      font-weight: normal;
+      color: #cbd5f5;
+      margin-bottom: 30px;
+    }
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+    button {
+      padding: 10px 18px;
+      border: none;
+      border-radius: 8px;
+      background: #6366f1;
+      color: white;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    button:hover {
+      background: #4f46e5;
+    }
+    .stats {
+      display: flex;
+      justify-content: center;
+      gap: 25px;
+      flex-wrap: wrap;
+      margin-bottom: 40px;
+    }
+    .card {
+      background: #1e293b;
+      padding: 20px;
+      border-radius: 12px;
+      min-width: 200px;
+      text-align: center;
+    }
+    canvas {
+      max-width: 700px;
+      margin: 0 auto;
+      display: block;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>The Queen Renovation Dashboard</h1>
+  <h2>Live Cost & Revenue Scenario Modeling</h2>
+
+  <div class="controls">
+    <button onclick="setScenario(180)">Basic Renovation</button>
+    <button onclick="setScenario(250)">Mid-Level Expansion</button>
+    <button onclick="setScenario(325)">Premium Restoration</button>
+  </div>
+
+  <div class="stats">
+    <div class="card">
+      <h3>Square Footage</h3>
+      <p id="sqft">25,000 sq ft</p>
+    </div>
+    <div class="card">
+      <h3>Cost per Sq Ft</h3>
+      <p id="cost">$250</p>
+    </div>
+    <div class="card">
+      <h3>Total Renovation Cost</h3>
+      <p id="total">$6,250,000</p>
+    </div>
+  </div>
+
+  <canvas id="costChart"></canvas>
+
+  <script>
+    const sqft = 25000;
+    const ctx = document.getElementById('costChart');
+
+    const chart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Total Renovation Cost'],
+        datasets: [{
+          label: 'USD ($)',
+          data: [6250000],
+          backgroundColor: '#6366f1'
+        }]
+      },
+      options: {
+        plugins: {
+          legend: { display: false }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              callback: value => '$' + value.toLocaleString()
+            }
+          }
+        }
+      }
+    });
+
+    function setScenario(costPerSqFt) {
+      const total = costPerSqFt * sqft;
+
+      document.getElementById('cost').innerText =
+        '$' + costPerSqFt.toLocaleString();
+
+      document.getElementById('total').innerText =
+        '$' + total.toLocaleString();
+
+      chart.data.datasets[0].data[0] = total;
+      chart.update();
+    }
+  </script>
+</body>
+</html>
